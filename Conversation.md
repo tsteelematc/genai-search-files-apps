@@ -181,3 +181,13 @@ Found files (sorted by date modified):
 ----------------------------------------------------------
 Search complete.
 ```
+
+## User Request 5: Create .gitignore
+
+**User:** ".gitignore for node_modules"
+
+**Action:** Created a `.gitignore` file with the following content:
+
+```
+node_modules
+```
