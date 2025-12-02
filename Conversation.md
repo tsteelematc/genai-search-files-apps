@@ -115,3 +115,69 @@ Search complete.
 **User:** "create md file with our convo here"
 
 **Action:** Created this `Conversation.md` file.
+
+## User Request 4: Create a TypeScript version
+
+**User:** "what about a ts version"
+
+**Action:** Created `searchFiles.ts` with the following TypeScript code:
+
+```typescript
+import * as fs from 'fs';
+import * as path from 'path';
+
+const searchPath = "C:\\Users\\t-ste\\OneDrive - Madison College";
+const searchTerm = "quiz";
+
+console.log(`Searching for files containing '${searchTerm}' in their name at the root of: ${searchPath}`);
+console.log("----------------------------------------------------------");
+
+try {
+    const files = fs.readdirSync(searchPath);
+
+    const filteredAndSortedFiles = files
+        .filter(file => file.toLowerCase().includes(searchTerm.toLowerCase()))
+        .map(file => {
+            const filePath = path.join(searchPath, file);
+            const stats = fs.statSync(filePath);
+            return {
+                name: file,
+                modified: stats.mtime
+            };
+        })
+        .sort((a, b) => b.modified.getTime() - a.modified.getTime());
+
+    if (filteredAndSortedFiles.length === 0) {
+        console.log("No files found matching the criteria.");
+    } else {
+        console.log("Found files (sorted by date modified):");
+        filteredAndSortedFiles.forEach(file => {
+            console.log(`- ${file.name} (Last Modified: ${file.modified.toLocaleString()})`);
+        });
+    }
+} catch (err) {
+    if (err instanceof Error) {
+        console.error(`An unexpected error occurred: ${err.message}`);
+    } else {
+        console.error("An unexpected error occurred:", err);
+    }
+}
+
+console.log("----------------------------------------------------------");
+console.log("Search complete.");
+```
+
+**Action:** Ran the script using `npx ts-node "c:\Users\t-ste\Documents\GitHub\2025-fall\genai-search-files-apps\searchFiles.ts"`.
+
+**Result:**
+```
+Searching for files containing 'quiz' in their name at the root of: C:\Users\t-ste\OneDrive - Madison College
+----------------------------------------------------------
+Found files (sorted by date modified):
+- JS Frameworks Quiz 02 Week 10.docx (Last Modified: 12/1/2025, 2:59:35 PM)
+- jsf-quiz-03-latest.docx (Last Modified: 12/1/2025, 2:58:41 PM)
+... (output truncated) ...
+- 2017-fall-db-tuth-quiz-week-02-01.PNG (Last Modified: 9/5/2017, 9:15:30 AM)
+----------------------------------------------------------
+Search complete.
+```
